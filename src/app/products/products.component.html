@@ -1,0 +1,44 @@
+<h2>Create a Product</h2>
+<form>
+  <label>
+    Product Name:
+    <input type="text" [(ngModel)]="productName" name="productName" required>
+  </label>
+  <label>
+    Product Price:
+    <input type="number" [(ngModel)]="productPrice" name="productPrice" required>
+  </label>
+  <label>
+    Taxes:
+    <select multiple [(ngModel)]="selectedTaxes" name="selectedTaxes">
+      <option *ngFor="let tax of taxes" [ngValue]="tax">{{tax.name}} - {{tax.percentage | percent}}</option>
+    </select>
+  </label>
+  <button type="submit" (click)="addProduct()">Add Product</button>
+</form>
+<h2>Products</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Taxes</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of products">
+      <td>{{product.name}}</td>
+      <td>{{product.price | currency}}</td>
+      <td>
+        <ul>
+          <li *ngFor="let tax of product.taxes">{{tax.name}} - {{tax.percentage | percent}}</li>
+        </ul>
+      </td>
+      <td>
+        <button type="button" (click)="editProduct(product)">Edit</button>
+        <button type="button" (click)="deleteProduct(product)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
