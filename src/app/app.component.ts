@@ -28,5 +28,5 @@ import { Component } from '@angular/core';
   `]
 })
 export class AppComponent {
-  title = 'My App';
+  title = 'Grocery Store Back Office';
 }

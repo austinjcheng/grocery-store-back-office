@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Tax, TaxesComponent } from '../taxes/taxes.component';
+import { Component, Input, OnInit } from '@angular/core';
+import { Tax } from '../taxes/taxes.component';
 
 interface Product {
   name: string;
@@ -12,34 +12,42 @@ interface Product {
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
-export class ProductsComponent {
+export class ProductsComponent implements OnInit {
   productName: string = '';
   productPrice: number = 0;
   selectedTaxes: Tax[] = [];
+  taxes: Tax[] = [];
+  products: Product[] = [];
 
-  taxes: Tax[] = [
-    { name: 'GST', percentage: 0.18 },
-    { name: 'VAT', percentage: 0.05 },
-    { name: 'Sales Tax', percentage: 0.1 }
-  ];
+  ngOnInit() {
+    // Load taxes from local storage or set default taxes
+    const storedTaxes = localStorage.getItem('taxes');
+    this.taxes = storedTaxes ? JSON.parse(storedTaxes) : [
+      { name: 'GST', percentage: 0.18 },
+      { name: 'VAT', percentage: 0.05 },
+      { name: 'Sales Tax', percentage: 0.1 }
+    ];
 
-  products: Product[] = [
-    {
-      name: 'Product 1',
-      price: 10,
-      taxes: [this.taxes[0]]
-    },
-    {
-      name: 'Product 2',
-      price: 20,
-      taxes: [this.taxes[1]]
-    },
-    {
-      name: 'Product 3',
-      price: 30,
-      taxes: [this.taxes[2]]
-    }
-  ];
+    // Load products from local storage or set default products
+    const storedProducts = localStorage.getItem('products');
+    this.products = storedProducts ? JSON.parse(storedProducts) : [
+      {
+        name: 'Product 1',
+        price: 10,
+        taxes: [this.taxes[0]]
+      },
+      {
+        name: 'Product 2',
+        price: 20,
+        taxes: [this.taxes[1]]
+      },
+      {
+        name: 'Product 3',
+        price: 30,
+        taxes: [this.taxes[2]]
+      }
+    ];
+  }
 
   addProduct() {
     const newProduct: Product = {
@@ -48,6 +56,7 @@ export class ProductsComponent {
       taxes: this.selectedTaxes
     };
     this.products.push(newProduct);
+    this.saveProductsToLocalStorage();
     this.productName = '';
     this.productPrice = 0;
     this.selectedTaxes = [];
@@ -63,6 +72,7 @@ export class ProductsComponent {
     product.name = this.productName;
     product.price = this.productPrice;
     product.taxes = this.selectedTaxes;
+    this.saveProductsToLocalStorage();
     this.productName = '';
     this.productPrice = 0;
     this.selectedTaxes = [];
@@ -72,6 +82,7 @@ export class ProductsComponent {
     const index = this.products.indexOf(product);
     if (index > -1) {
       this.products.splice(index, 1);
+      this.saveProductsToLocalStorage();
     }
     this.productName = '';
     this.productPrice = 0;
@@ -79,13 +90,25 @@ export class ProductsComponent {
   }
 
   addTax(tax: Tax) {
-    this.selectedTaxes.push(tax);
+    this.taxes.push(tax);
+    this.saveTaxesToLocalStorage();
   }
 
   removeTax(tax: Tax) {
-    const index = this.selectedTaxes.indexOf(tax);
+    const index = this.taxes.indexOf(tax);
     if (index > -1) {
-      this.selectedTaxes.splice(index, 1);
+      this.taxes.splice(index, 1);
+      this.saveTaxesToLocalStorage();
     }
+  }
+
+  // Method that saves taxes to local storage
+  saveTaxesToLocalStorage() {
+    localStorage.setItem('taxes', JSON.stringify(this.taxes));
+  }
+
+  // Method that saves products to local storage
+  saveProductsToLocalStorage() {
+    localStorage.setItem('products', JSON.stringify(this.products));
   }
 }

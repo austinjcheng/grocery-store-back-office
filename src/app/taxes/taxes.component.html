@@ -2,15 +2,15 @@
 
 <form>
   <label for="tax-name-input">Tax Name:</label>
-  <input id="tax-name-input" type="text" #textInput [(ngModel)]="taxName" (input)="taxName = textInput.value">
+  <input id="tax-name-input" type="text" [(ngModel)]="taxName" name="taxName" required>
 
-  <label for="tax-percentage-input">Tax Percentage:</label>
-  <input id="tax-percentage-input" type="number" #taxInput [(ngModel)]="taxPercentage" (input)="taxPercentage = +taxInput.value">
+  <label for="tax-percentage-input">Percentage:</label>
+  <input id="tax-percentage-input" type="number" [(ngModel)]="taxPercentage" name="taxPercentage" min="0" max="1" step="0.01" required>
 
-  <button type="button" (click)="addTax()">Add Tax</button>
+  <button type="submit" (click)="addTax()">Add Tax</button>
 </form>
 
-<div *ngFor="let tax of taxes">
-  <p>Tax Name: {{tax.name}}</p>
-  <p>Tax Percentage: {{tax.percentage}}</p>
-</div>
+<h2>Current Taxes</h2>
+<ul>
+  <li *ngFor="let tax of taxes">{{tax.name}} - {{tax.percentage | percent}}</li>
+</ul>
