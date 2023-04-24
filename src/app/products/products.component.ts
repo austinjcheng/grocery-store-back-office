@@ -50,6 +50,10 @@ export class ProductsComponent implements OnInit {
   }
 
   addProduct() {
+    if (!this.productName || !this.productPrice || !this.selectedTaxes.length) {
+      return;
+    }
+
     const newProduct: Product = {
       name: this.productName,
       price: this.productPrice,

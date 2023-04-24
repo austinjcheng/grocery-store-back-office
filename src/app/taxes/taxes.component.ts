@@ -30,6 +30,10 @@ export class TaxesComponent implements OnInit {
     }
   }
 
+  isTaxFormValid(): boolean {
+    return this.taxName.trim() !== '' && this.taxPercentage >= 0 && this.taxPercentage <= 100;
+  }
+
   addTax() {
     const newTax: Tax = {
       name: this.taxName,
@@ -40,6 +44,14 @@ export class TaxesComponent implements OnInit {
     this.saveTaxesToLocalStorage(); // save taxes to local storage
     this.taxName = '';
     this.taxPercentage = 0;
+  }
+
+  removeTax(tax: Tax) {
+    const index = this.taxes.indexOf(tax);
+    if (index > -1) {
+      this.taxes.splice(index, 1);
+      this.saveTaxesToLocalStorage();
+    }
   }
 
   // Method that saves taxes to local storage
