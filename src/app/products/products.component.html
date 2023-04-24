@@ -10,7 +10,7 @@
   </label>
   <label>
     Taxes:
-    <select multiple [(ngModel)]="selectedTaxes" name="selectedTaxes">
+    <select multiple [(ngModel)]="selectedTaxes" name="selectedTaxes" required>
       <option *ngFor="let tax of taxes" [ngValue]="tax">{{tax.name}} - {{tax.percentage | percent}}</option>
     </select>
   </label>
