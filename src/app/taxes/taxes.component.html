@@ -2,7 +2,7 @@
 
 <form>
   <label for="tax-name-input">Tax Name:</label>
-  <input id="tax-name-input" type="text" [(ngModel)]="taxName">
+  <input id="tax-name-input" type="text" #textInput [(ngModel)]="taxName" (input)="taxName = textInput.value">
 
   <label for="tax-percentage-input">Tax Percentage:</label>
   <input id="tax-percentage-input" type="number" #taxInput [(ngModel)]="taxPercentage" (input)="taxPercentage = +taxInput.value">
