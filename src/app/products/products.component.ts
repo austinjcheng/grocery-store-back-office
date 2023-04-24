@@ -18,6 +18,7 @@ export class ProductsComponent implements OnInit {
   selectedTaxes: Tax[] = [];
   taxes: Tax[] = [];
   products: Product[] = [];
+  editingProduct: Product | null = null;
 
   ngOnInit() {
     // Load taxes from local storage or set default taxes
@@ -32,17 +33,17 @@ export class ProductsComponent implements OnInit {
     const storedProducts = localStorage.getItem('products');
     this.products = storedProducts ? JSON.parse(storedProducts) : [
       {
-        name: 'Product 1',
+        name: 'Apples',
         price: 10,
         taxes: [this.taxes[0]]
       },
       {
-        name: 'Product 2',
+        name: 'Oranges',
         price: 20,
         taxes: [this.taxes[1]]
       },
       {
-        name: 'Product 3',
+        name: 'Pears',
         price: 30,
         taxes: [this.taxes[2]]
       }
@@ -53,51 +54,62 @@ export class ProductsComponent implements OnInit {
     if (!this.productName || !this.productPrice || !this.selectedTaxes.length) {
       return;
     }
-
+  
     const newProduct: Product = {
       name: this.productName,
       price: this.productPrice,
       taxes: this.selectedTaxes
     };
+  
     this.products.push(newProduct);
     this.saveProductsToLocalStorage();
     this.productName = '';
     this.productPrice = 0;
     this.selectedTaxes = [];
   }
-
+  
   editProduct(product: Product) {
+    this.editingProduct = product;
     this.productName = product.name;
     this.productPrice = product.price;
     this.selectedTaxes = product.taxes;
   }
-
-  updateProduct(product: Product) {
-    product.name = this.productName;
-    product.price = this.productPrice;
-    product.taxes = this.selectedTaxes;
+  
+  updateProduct() {
+    if (!this.editingProduct) {
+      return;
+    }
+  
+    this.editingProduct.name = this.productName;
+    this.editingProduct.price = this.productPrice;
+    this.editingProduct.taxes = this.selectedTaxes;
     this.saveProductsToLocalStorage();
     this.productName = '';
     this.productPrice = 0;
     this.selectedTaxes = [];
+    this.editingProduct = null;
   }
-
+  
+  cancelEdit() {
+    this.editingProduct = null;
+    this.productName = '';
+    this.productPrice = 0;
+    this.selectedTaxes = [];
+  }
+  
   deleteProduct(product: Product) {
     const index = this.products.indexOf(product);
     if (index > -1) {
       this.products.splice(index, 1);
       this.saveProductsToLocalStorage();
     }
-    this.productName = '';
-    this.productPrice = 0;
-    this.selectedTaxes = [];
   }
-
+  
   addTax(tax: Tax) {
     this.taxes.push(tax);
     this.saveTaxesToLocalStorage();
   }
-
+  
   removeTax(tax: Tax) {
     const index = this.taxes.indexOf(tax);
     if (index > -1) {
@@ -105,14 +117,14 @@ export class ProductsComponent implements OnInit {
       this.saveTaxesToLocalStorage();
     }
   }
-
+  
   // Method that saves taxes to local storage
   saveTaxesToLocalStorage() {
     localStorage.setItem('taxes', JSON.stringify(this.taxes));
   }
-
+  
   // Method that saves products to local storage
   saveProductsToLocalStorage() {
     localStorage.setItem('products', JSON.stringify(this.products));
   }
-}
+}  
